@@ -91,7 +91,11 @@ else:
 	sys.stderr.write("INFO: '%s' did not exist, saving default template - please configure!\n" % templateFilename)
 	file(templateFilename, "w").write(template)
 
-file(texName, "w").write(template % tikzName)
+# Insert TikZ file into template
+if (template.find("%%TIKZFILE%%") < 0):
+    sys.stderr.write("tikz2pdf: template must contain '%%TIKZFILE%%'\n")
+    sys.exit(1)
+file(texName, "w").write(template.replace('%%TIKZFILE%%', tikzName))
 
 def verboseUnlink(filename):
 	# FIXME: check mtime
