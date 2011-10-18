@@ -64,7 +64,7 @@ while searchDir != "/":
 	searchDir = os.path.split(searchDir)[0]
 
 # re-use texdoc's configuration variables for viewing TeX's output:
-viewCommand = "kpdf %r"
+viewCommand = "open %r"
 texdocViewCommand = os.environ.get("TEXDOCVIEW_pdf", None)
 if texdocViewCommand:
 	viewCommand = texdocViewCommand.rstrip("&").replace("%s", "%r")
