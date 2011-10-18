@@ -40,6 +40,8 @@ import sys, os.path, subprocess, glob, time, optparse, tempfile, shutil
 op = optparse.OptionParser(usage="%prog [options] foo.tikz")
 op.add_option("-v", "--verbose", action = "store_true", default = False,
               dest = "verbose", help = "verbose output")
+op.add_option("-n", "--no-cleanup", action = "store_true", default = False,
+              dest = "no_cleanup", help = "Don't delete temporary files")
 op.add_option("-o", "--out", dest = "outfile", metavar="FILENAME",
               help = "only convert once, leave resulting pdf as FILENAME")
 op.add_option("-s", "--view", action = "store_true",
@@ -99,13 +101,14 @@ file(texName, "w").write(template.replace('%%TIKZFILE%%', tikzName))
 
 def verboseUnlink(filename):
     # FIXME: check mtime
-    if options.verbose:
-        print "cleaning up %r..." % filename
-    try:
-        os.unlink(filename)
-    except OSError, e:
-        if e.errno != 2:
-            raise e
+    if not options.no_cleanup:
+        if options.verbose:
+            print "cleaning up %r..." % filename
+        try:
+            os.unlink(filename)
+        except OSError, e:
+            if e.errno != 2:
+                raise e
 
 viewer = None
 
