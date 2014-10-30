@@ -126,7 +126,7 @@ while True:
             if ec:
                 if out:
                     out.seek(0)
-                    sys.stdout.write(out.read())
+                    sys.stdout.write(out.read().decode())
                 print("tikz2pdf: ERROR generating %r with pdflatex." % pdfName)
             else:
                 print("tikz2pdf: Successfully generated %r." % pdfName)
