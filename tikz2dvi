@@ -63,7 +63,7 @@ while searchDir != "/":
     searchDir = os.path.split(searchDir)[0]
 
 if os.path.exists(templateFilename):
-    template = file(templateFilename).read()
+    template = open(templateFilename).read()
 else:
     template = r"""\documentclass{article}
 
@@ -82,22 +82,22 @@ else:
 \end{document}
 """
     sys.stderr.write("INFO: '%s' did not exist, saving default template - please configure!\n" % templateFilename)
-    file(templateFilename, "w").write(template)
+    open(templateFilename, "w").write(template)
 
 # Insert TikZ file into template
 if (template.find("%%TIKZFILE%%") < 0):
     sys.stderr.write("tikz2dvi: template must contain '%%TIKZFILE%%'\n")
     sys.exit(1)
-file(texName, "w").write(template.replace('%%TIKZFILE%%', tikzName))
+open(texName, "w").write(template.replace('%%TIKZFILE%%', tikzName))
 
 def verboseUnlink(filename):
     # FIXME: check mtime
     if not options.no_cleanup:
         if options.verbose:
-            print "cleaning up %r..." % filename
+            print("cleaning up %r..." % filename)
         try:
             os.unlink(filename)
-        except OSError, e:
+        except OSError as e:
             if e.errno != 2:
                 raise e
 
@@ -109,7 +109,7 @@ while True:
         mtime = os.path.getmtime(tikzName)
         if mtime > previous:
             out = None
-            print "tikz2dvi: calling latex..."
+            print("tikz2dvi: calling latex...")
             if not options.verbose:
                 out = tempfile.TemporaryFile()
             ec = subprocess.call(
@@ -117,10 +117,10 @@ while True:
             if ec:
                 if out:
                     out.seek(0)
-                    sys.stdout.write(out.read())
-                print "tikz2dvi: ERROR generating %r with latex." % dviName
+                    sys.stdout.write(out.read().decode())
+                print("tikz2dvi: ERROR generating %r with latex." % dviName)
             else:
-                print "tikz2dvi: Successfully generated %r." % dviName
+                print("tikz2dvi: Successfully generated %r." % dviName)
             if out:
                 out.close()
 
